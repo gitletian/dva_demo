@@ -81,7 +81,7 @@
     为异步 action
 
 7、配置 antd
-    在 .webpackrc 中配置 antd，
+    在 .webpackrc 中配置 antd，使 babel-plugin-import 插件生效
         {
         "extraBabelPlugins": [
             ["import", {

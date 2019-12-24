@@ -20,7 +20,8 @@ export default {
             "key": "2",
             "name": "刘小洋",
             "gender": "男"
-        }]
+        }],
+        num: 0,
     },
     // 订阅，这个实际用的少，表示监听当前state的变化
     // Subscription 语义是订阅，用于订阅一个数据源，然后根据条件 dispatch 需要的 action。
@@ -67,6 +68,16 @@ export default {
             });
         }
     },
+
+    // effects 和 reducers 都是处理 action 的，
+    // effects是处理异步的 action
+    // reducers 是处理同步的 action，
+    // call 一般是调用 service 层方法 进行异步数据获取 io 读取等
+
+    // put 和 dispatch 类似都是 触发 action，都是会优先匹配 reducers，当 reducers 匹配不上时，才会进入 effects 进行匹配
+    // dispatch 一般调用异步 action，进行 effects 处理， action 会优先匹配 reducers， 当 reducers 匹配不上时，则会匹配 effects。 dispatch 一般用于外部对象触发 action
+    // put 一般调用 同步 action 进行 reducers 处理， put 会优先调用 reducers， 如果找不到 reducers， 则会调用 effects。put 一般用于 store 内部进行 action 触发。
+
     effects: {
         *addUser({ param }, { call, put }) {
             //param是从组件router传递过来的参数,这里就是上面定义的
@@ -84,6 +95,14 @@ export default {
                     myuser: myuser.data
                 }
             });
+        },
+        // 在组件中 dispatch 一个action的例子中，如果要在effects中对于param数据和当前的state数据进行再出处理，这里怎么获取state呢？采用select
+        *addByOne({ param }, { call, put, select }) { //这里使用select
+            const num = yield setLet(stata => state.num);  //这里就获取到了当前state中的数据num
+            // const num = yield select(({ num }) => num);   // 方式二
+            // const num = yield select(_ => _.num);         // 方式三
+
+
         }
     },
     reducers: {  //用来保存更新state值 上面的put方法调用这里的方法
